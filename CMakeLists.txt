@@ -16,6 +16,8 @@ search_file(${top_dir}/src TAGET_FILES)
 
 add_library(${project_name} SHARED ${TAGET_FILES})
 
+add_definitions(-DFRAMEWORK_LIBRARY)
+
 target_link_libraries(${project_name} 
     ${thirdparty_libs}
     spdlog
