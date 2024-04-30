@@ -4,6 +4,8 @@ include(cmake/commondefs.cmake)
 
 set(project_name framework)
 
+project(${project_name})
+
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${top_binary_dir})
 
 include_directories(
