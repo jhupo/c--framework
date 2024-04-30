@@ -20,6 +20,5 @@ add_definitions(-DFRAMEWORK_LIBRARY)
 
 target_link_libraries(${project_name} 
     ${thirdparty_libs}
-    spdlog
     jsoncpp
 )

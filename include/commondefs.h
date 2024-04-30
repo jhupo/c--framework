@@ -54,7 +54,7 @@ template <typename Wrapper> static inline typename Wrapper::element_type* GetPtr
 
 #define DECLARE_SHARED_PTR(Class)   \
     public: \
-        typedef boost::shared_ptr<Class> ptr; \
+        typedef std::shared_ptr<Class> ptr; \
     private:
 
 
