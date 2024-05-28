@@ -50,6 +50,15 @@
         "thread": "cpp",
         "chrono": "cpp",
         "set": "cpp",
-        "ratio": "cpp"
+        "ratio": "cpp",
+        "mutex": "cpp",
+        "charconv": "cpp",
+        "codecvt": "cpp",
+        "map": "cpp",
+        "future": "cpp",
+        "iomanip": "cpp",
+        "cinttypes": "cpp",
+        "variant": "cpp",
+        "shared_mutex": "cpp"
     }
 }
