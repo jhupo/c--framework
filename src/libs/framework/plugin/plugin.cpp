@@ -1,9 +1,0 @@
-#include <plugin/plugin.h>
-
-
-FRAMEWORK_BEGIN_NAMESPACE
-
-
-
-
-FRAMEWORK_END_NAMESPACE
