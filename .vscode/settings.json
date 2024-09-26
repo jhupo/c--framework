@@ -1,0 +1,11 @@
+{
+    "files.associations": {
+        "*.in": "c",
+        "xmemory0": "c",
+        "limits": "c",
+        "memory": "cpp",
+        "type_traits": "c",
+        "xstring": "cpp",
+        "xiosbase": "cpp"
+    }
+}
