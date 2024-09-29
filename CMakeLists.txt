@@ -18,7 +18,7 @@ endif()
 
 configure_file(
     cmake/template.h.in
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/framework_global.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/version.h
 )
 
 find_package(Threads REQUIRED)
@@ -36,6 +36,7 @@ set_files_filter_group(${FOUND_FILES})
 
 if(BUILD_SHARED_LIBS)
     add_library(${PROJECT_NAME} SHARED ${FOUND_FILES})
+    target_compile_definitions(-DFRANEWORK_LIBRARY)
 else()
     add_library(${PROJECT_NAME} STATIC ${FOUND_FILES})
 endif()

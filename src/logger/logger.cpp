@@ -1,113 +1,119 @@
 #include <logger/logger.h>
 
-
 FRAMEWORK_BEGIN_NAMESPACE
 
-namespace logger {
-
-    const char* ToString(Level level)
+const char *ToString(Level level)
+{
+    switch (level)
     {
+#define XX(name) \
+    case name:   \
+        return #name;
+        XX(Debug)
+        XX(Info)
+        XX(Warning)
+        XX(Error)
+        XX(Fatal)
+#undef XX
+    default:
+        break;
+    }
+    return "Unknow";
+}
 
+Level FromString(const char *str)
+{
+#define XX(name)                 \
+    if (strcmp(#name, str) == 0) \
+        return name;
+    XX(Debug)
+    XX(Info)
+    XX(Warning)
+    XX(Error)
+    XX(Fatal)
+#undef XX
+    return Level::Unknow;
+}
+
+class event_impl
+{
+public:
+    event_impl(const std::string &category, const event::source &src, level level, uint32_t thread, uint64_t time)
+        : category_(category), src_(src), level_(level), thread_(thread), time_(time)
+    {
     }
 
-    Level FromString(const char* str)
-    {
+    std::string category_;
+    event::source src_;
+    level level_;
+    uint32_t thread_;
+    uint64_t time_;
+    std::stringstream ss_;
+};
 
-    }
+event::event(const std::string &category, const source &src, level level, uint32_t thread, uint64_t time)
+    : d(new event_impl(category, src, level, thread, time))
+{
+}
 
+std::string event::category() const
+{
+    return d->category_;
+}
 
-    class Event::Impl
-    {
-    public:
-        Impl(const std::shared_ptr<Logger>& logger, Level level, const char* file, int line, const char* function, uint32_t elapse, uint32_t thread)
-            : logger_(logger)
-            , level_(level)
-            , file_(file)
-            , line_(line)
-            , function_(function)
-            , elapse_(elapse)
-            , thread_(thread)
-        {
+const char *event::file() const
+{
+    return d->src_.file;
+}
 
-        }
-        std::shared_ptr<Logger> logger_;
-        Level                   level_;
-        const char*             file_;
-        int                     line_;
-        const char*             function_;
-        uint32_t                elapse_;
-        uint32_t                thread_;
-        std::stringstream       ss_;
-    };
+int event::line() const
+{
+    return d->src_.line;
+}
 
+const char *event::func() const
+{
+    return d->src_.func;
+}
 
-    Event::Event(const std::shared_ptr<Logger>& logger, Level level, const char* file, int line, const char* function, uint32_t elapse, uint32_t thread)
-        : d(new Impl(logger, level, file, line, function, elapse, thread))
-    {
+level event::level() const
+{
+    return d->level_;
+}
 
-    }
+uint32_t event::thread() const
+{
+    return d->thread_;
+}
 
-    Level Event::level() const
-    {
-        return d->level_;
-    }
+uint64_t event::time() const
+{
+    return d->time_;
+}
 
-    const char* Event::file() const
-    {
-        return d->file_;
-    }
+std::string event::context() const
+{
+    return d->ss_.str();
+}
 
-    int Event::line() const
-    {
-        return d->line_;
-    }
+std::stringstream &event::ss()
+{
+    return d->ss_;
+}
 
-    const char* Event::function() const
-    {
-        return d->function_;
-    }
+void event::format(const char *fmt, ...)
+{
+    va_list al;
+    va_start(al, fmt);
+    format(fmt, al);
+    va_end(al);
+}
 
-    uint32_t Event::elapse() const
-    {
-        return d->elapse_;
-    }
-
-    uint32_t Event::thread() const
-    {
-        return d->thread_;
-    }
-
-    std::string Event::context() const
-    {
-        return d->ss_.str();
-    }
-
-    std::shared_ptr<Logger> Event::logger() const
-    {
-        return d->logger_;
-    }
-
-    std::stringstream& Event::ss() const
-    {
-        return d->ss_;
-    }
-
-    void Event::format(const char* fmt, ...)
-    {
-        va_list al;
-        va_start(al, fmt);
-        format(fmt, al);
-        va_end(al);
-    }
-
-    void Event::format(const char* fmt, va_list al)
-    {
-        char buffer[1024] = { 0 };
-        vsnprintf(buffer, sizeof(buffer), fmt, al);
-        d->ss_ << buffer;
-    }
-
-
+void event::format(const char *fmt, va_list al)
+{
+    char buf[1024];
+    vsnprintf(buf, sizeof(buf), fmt, al);
+    d->ss_ << buf;
 }
 
 FRAMEWORK_END_NAMESPACE

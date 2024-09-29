@@ -1,24 +1,23 @@
 #ifndef __FRAMEWORK_CORE_H__
 #define __FRAMEWORK_CORE_H__
 
+#include <memory>
+#include <string>
 #include <iostream>
 
-#if defined(__GNUC__) 
-#   if __GNUC__ >= 4
-#       define DECL_EXPORT __attribute__ ((visibility ("default")))
-#       define DECL_IMPORT __attribute__ ((visibility ("default")))
-#   else
-#       define DECL_EXPORT
-#       define DECL_IMPORT
+#if defined(FRANEWORK_LIBRARY)
+#   if defined(_WIN32)
+#       if defined(framework_EXPORTS)
+#           define FRAMEWORK_EXPORT __declspec(dllexport)
+#       else 
+#           define FRAMEWORK_EXPORT __declspec(dllimport)
+#       endif
+#   else 
+#    define FRAMEWORK_EXPORT __attribute__((visibility("default")))
 #   endif
-#elif defined(_MSC_VER)
-#   define DECL_EXPORT __declspec(dllexport)
-#   define DECL_IMPORT __declspec(dllimport)
-#else 
-#   define DECL_EXPORT 
-#   define DECL_IMPORT 
+#else
+#define FRAMEWORK_EXPORT
 #endif
-
 
 #if defined(__GNUC__) 
 #   if __GNUC__ < 5
@@ -44,21 +43,27 @@
 #  endif
 #endif
 
-#define BEGIN_NAMESPACE(x) namespace x {
-#define END_NAMESPACE(x) }
-#define USING_NAMESPACE(x) using namespace x;
+#if defined(FRAMEWORK_USE_NAMESPACE)
+#   if defined(FRAMEWORK_GLOBAL_NAMESPACE)
+#       define FRAMEWORK_BEGIN_NAMESPACE namespace FRAMEWORK_GLOBAL_NAMESPACE {
+#       define FRAMEWORK_END_NAMESPACE }
+#   else
+#       define FRAMEWORK_BEGIN_NAMESPACE namespace framework {
+#       define FRAMEWORK_END_NAMESPACE }
+#   endif
+#else
+#   define FRAMEWORK_BEGIN_NAMESPACE 
+#   define FRAMEWORK_END_NAMESPACE
+#endif
 
 #define UNUSED(x) (void)(x)
 
-#define DISABLE_COPY(Class) \
-    Class(const Class &) = delete;\
-    Class &operator=(const Class &) = delete;
+template<typename Class>
+class enable_disable_copy_from_this
+{
+    Class(const Class&) = delete;
+    class& operator=(const Class&) = delete;
+};
 
-#define DECLARE_SHARED_PTR(Class) \
-    public: typedef std::shared_ptr<Class> ptr; private:
-
-#define DECLARE_CLASS_DETAIL(Class) \
-    class Impl; Impl* d; \
-    public: virtual ~Class() { delete d; } private:
 
 #endif
