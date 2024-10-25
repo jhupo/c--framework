@@ -7,6 +7,10 @@ include(cmake/install.cmake)
 
 option(BUILD_TESTS "Build tests" OFF)
 
+if(BUILD_TESTS)
+    add_subdirectory(tests)
+endif()
+
 if(MSVC)
     string(APPEND CMAKE_CXX_FLAGS " /MP")
 endif()
@@ -36,7 +40,7 @@ set_files_filter_group(${FOUND_FILES})
 
 if(BUILD_SHARED_LIBS)
     add_library(${PROJECT_NAME} SHARED ${FOUND_FILES})
-    target_compile_definitions(-DFRANEWORK_LIBRARY)
+    target_compile_definitions(${PROJECT_NAME} PRIVATE -DFRANEWORK_LIBRARY)
 else()
     add_library(${PROJECT_NAME} STATIC ${FOUND_FILES})
 endif()
@@ -47,7 +51,6 @@ disable_warnings()
 target_compile_definitions(
     ${PROJECT_NAME} 
     PUBLIC $<$<PLATFORM_ID:Windows>:_UNICODE UNICODE> 
-    PUBLIC FRAMEWORK_GLOBAL_NAMESPACE=framework
 )
 
 target_include_directories(

@@ -6,64 +6,59 @@
 #include <iostream>
 
 #if defined(FRANEWORK_LIBRARY)
-#   if defined(_WIN32)
-#       if defined(framework_EXPORTS)
-#           define FRAMEWORK_EXPORT __declspec(dllexport)
-#       else 
-#           define FRAMEWORK_EXPORT __declspec(dllimport)
-#       endif
-#   else 
-#    define FRAMEWORK_EXPORT __attribute__((visibility("default")))
-#   endif
+    #if defined(_WIN32)
+        #if defined(framework_EXPORTS)
+            #define FRAMEWORK_EXPORT __declspec(dllexport)
+        #else
+            #define FRAMEWORK_EXPORT __declspec(dllimport)
+        #endif
+    #else
+        #define FRAMEWORK_EXPORT __attribute__((visibility("default")))
+    #endif
 #else
-#define FRAMEWORK_EXPORT
+    #define FRAMEWORK_EXPORT
 #endif
 
-#if defined(__GNUC__) 
-#   if __GNUC__ < 5
-#       define FRAMEWORK_NOEXCEPT _NOEXCEPT
-#       define FRAMEWORK_CONSTEXPR
-#   else
-#       define FRAMEWORK_NOEXCEPT noexcept
-#       define FRAMEWORK_CONSTEXPR constexpr
-#   endif
+#if defined(__GNUC__)
+    #if __GNUC__ < 5
+        #define FRAMEWORK_NOEXCEPT _NOEXCEPT
+        #define FRAMEWORK_CONSTEXPR
+    #else
+        #define FRAMEWORK_NOEXCEPT noexcept
+        #define FRAMEWORK_CONSTEXPR constexpr
+    #endif
 #elif defined(_MSC_VER) && (_MSC_VER < 1900)
-#   define FRAMEWORK_NOEXCEPT _NOEXCEPT
-#   define FRAMEWORK_CONSTEXPR 
-#else 
-#   define FRAMEWORK_NOEXCEPT noexcept
-#   define FRAMEWORK_CONSTEXPR constexpr
+    #define FRAMEWORK_NOEXCEPT _NOEXCEPT
+    #define FRAMEWORK_CONSTEXPR
+#else
+    #define FRAMEWORK_NOEXCEPT noexcept
+    #define FRAMEWORK_CONSTEXPR constexpr
 #endif
 
 #ifndef EXTERN_C
-#  ifdef __cplusplus
-#    define EXTERN_C extern "C"
-#  else
-#    define EXTERN_C extern
-#  endif
+    #ifdef __cplusplus
+        #define EXTERN_C extern "C"
+    #else
+        #define EXTERN_C extern
+    #endif
 #endif
 
-#if defined(FRAMEWORK_USE_NAMESPACE)
-#   if defined(FRAMEWORK_GLOBAL_NAMESPACE)
-#       define FRAMEWORK_BEGIN_NAMESPACE namespace FRAMEWORK_GLOBAL_NAMESPACE {
-#       define FRAMEWORK_END_NAMESPACE }
-#   else
-#       define FRAMEWORK_BEGIN_NAMESPACE namespace framework {
-#       define FRAMEWORK_END_NAMESPACE }
-#   endif
-#else
-#   define FRAMEWORK_BEGIN_NAMESPACE 
-#   define FRAMEWORK_END_NAMESPACE
-#endif
+#define FRAMEWORK_BEGIN_NAMESPACE namespace fw {
+#define FRAMEWORK_END_NAMESPACE }
 
 #define UNUSED(x) (void)(x)
 
-template<typename Class>
-class enable_disable_copy_from_this
-{
-    Class(const Class&) = delete;
-    class& operator=(const Class&) = delete;
-};
+#define DISABLE_COPY(Class)        \
+    Class(const Class &) = delete; \
+    Class &operator=(const Class &) = delete;
 
+template <typename Class>
+class SingletonPtr {
+public:
+    static std::shared_ptr<Class> inst() {
+        static std::shared_ptr<Class> instance = std::make_shared<Class>();
+        return instance;
+    }
+};
 
 #endif

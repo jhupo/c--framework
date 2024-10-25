@@ -1,4 +1,6 @@
 {
+    "editor.formatOnSave": true,
+    "clang-format.executable": "clang-format",
     "files.associations": {
         "*.in": "c",
         "xmemory0": "c",
@@ -37,6 +39,27 @@
         "xmemory": "cpp",
         "xstddef": "cpp",
         "xtr1common": "cpp",
-        "xutility": "cpp"
+        "xutility": "cpp",
+        "chrono": "cpp",
+        "functional": "cpp",
+        "ratio": "cpp",
+        "xthread": "cpp",
+        "thread": "cpp",
+        "tuple": "cpp",
+        "xfunctional": "cpp",
+        "condition_variable": "cpp",
+        "atomic": "cpp",
+        "mutex": "cpp",
+        "xxatomic": "cpp",
+        "xtime": "cpp",
+        "vector": "cpp",
+        "algorithm": "cpp",
+        "deque": "cpp",
+        "queue": "cpp",
+        "resumable": "cpp",
+        "future": "cpp",
+        "map": "cpp",
+        "xtree": "cpp",
+        "ctime": "cpp"
     }
 }
